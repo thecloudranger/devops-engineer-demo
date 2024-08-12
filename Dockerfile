@@ -8,13 +8,14 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir flask
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Define environment variable
-ENV FLASK_APP=app.py
+ENV FLASK_APP=app/app.py
 
-# Run app.py when the container launches
-CMD ["flask", "run", "--host=0.0.0.0"]
+# Run gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app.app:app"]
